@@ -31,7 +31,7 @@ public class Message {
     private ChatRoom chatRoom;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "sender_id")
+    @JoinColumn(name = "sender_id",referencedColumnName = "userID")
     private User sender;
 
     private String status;

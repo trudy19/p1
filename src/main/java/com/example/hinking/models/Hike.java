@@ -30,7 +30,7 @@ public class Hike {
     private String endPoint;
     private Float distance;
     private Float duration;
-    private String visibiliy;
+    private String visibility;
 
 
     @ManyToOne
