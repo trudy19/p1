@@ -1,6 +1,7 @@
 package com.example.hinking.controllers;
 
 
+import com.example.hinking.dtos.HikeDTO;
 import com.example.hinking.models.Hike;
 import com.example.hinking.services.HikeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class HikeController {
     public void deleteHike(@PathVariable Long id) {
         hikeService.deleteHike(id);
     }
+
+
+
 }
 
 

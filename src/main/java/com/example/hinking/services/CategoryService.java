@@ -1,34 +1,43 @@
 package com.example.hinking.services;
 
+import com.example.hinking.dtos.CategoryDTO;
+import com.example.hinking.mappers.CategoryMapper;
 import com.example.hinking.models.Category;
 import com.example.hinking.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDTO> getAllCategories() {
+
+        return categoryRepository.findAll().stream().map(CategoryMapper::toDTO).collect(Collectors.toList());
     }
 
-    public Category getCategoryById(Long id) {
-        return categoryRepository.findById(id).orElse(null);
+    public CategoryDTO getCategoryById(Long id) {
+        return categoryRepository.findById(id).map(CategoryMapper::toDTO).orElse(null);
     }
 
-    public Category createCategory(Category category) {
-        return categoryRepository.save(category);
+    public CategoryDTO createCategory(CategoryDTO categoryDTO) {
+        Category category = CategoryMapper.toEntity(categoryDTO);
+        category = categoryRepository.save(category);
+        return CategoryMapper.toDTO(category);
     }
 
-    public Category updateCategory(Long id, Category categoryDetails) {
+    public CategoryDTO updateCategory(Long id, CategoryDTO categoryDetails) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category != null) {
             category.setName(categoryDetails.getName());
-            return categoryRepository.save(category);
+            category = categoryRepository.save(category);
+
+            return CategoryMapper.toDTO(category);
         }
         return null;
     }
@@ -36,5 +45,7 @@ public class CategoryService {
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);
     }
+
+
 }
 

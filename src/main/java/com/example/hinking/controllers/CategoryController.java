@@ -1,7 +1,7 @@
 package com.example.hinking.controllers;
 
 
-import com.example.hinking.models.Category;
+import com.example.hinking.dtos.CategoryDTO;
 import com.example.hinking.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,23 +20,23 @@ import java.util.List;
         private CategoryService categoryService;
 
         @GetMapping
-        public List<Category> getAllCategories() {
+        public List<CategoryDTO> getAllCategories() {
             return categoryService.getAllCategories();
         }
 
         @GetMapping("/{id}")
-        public Category getCategoryById(@PathVariable Long id) {
+        public CategoryDTO getCategoryById(@PathVariable Long id) {
             return categoryService.getCategoryById(id);
         }
 
         @PostMapping
-        public Category createCategory(@RequestBody Category category) {
-            return categoryService.createCategory(category);
+        public CategoryDTO createCategory(@RequestBody CategoryDTO categoryDTO) {
+            return categoryService.createCategory(categoryDTO);
         }
 
         @PutMapping("/{id}")
-        public Category updateCategory(@PathVariable Long id, @RequestBody Category category) {
-            return categoryService.updateCategory(id, category);
+        public CategoryDTO updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+            return categoryService.updateCategory(id, categoryDTO);
         }
 
         @DeleteMapping("/{id}")
