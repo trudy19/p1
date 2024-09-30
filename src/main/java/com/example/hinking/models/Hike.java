@@ -38,7 +38,7 @@ public class Hike {
     private User Creator ;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "categoryID")
     private Category category;
 
     @ManyToOne
