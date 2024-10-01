@@ -2,6 +2,7 @@ package com.example.hinking.controllers;
 
 
 
+import com.example.hinking.dtos.GroupDTO;
 import com.example.hinking.models.Group;
 import com.example.hinking.services.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,22 +23,22 @@ public class GroupController {
     private GroupService groupService;
 
     @GetMapping
-    public List<Group> getAllGroups() {
+    public List<GroupDTO> getAllGroups() {
         return groupService.getAllGroups();
     }
 
     @GetMapping("/{id}")
-    public Group getGroupById(@PathVariable Long id) {
+    public GroupDTO getGroupById(@PathVariable Long id) {
         return groupService.getGroupById(id);
     }
 
     @PostMapping
-    public Group createGroup(@RequestBody Group group) {
+    public GroupDTO createGroup(@RequestBody GroupDTO group) {
         return groupService.createGroup(group);
     }
 
     @PutMapping("/{id}")
-    public Group updateGroup(@PathVariable Long id, @RequestBody Group group) {
+    public GroupDTO updateGroup(@PathVariable Long id, @RequestBody Group group) {
         return groupService.updateGroup(id, group);
     }
 

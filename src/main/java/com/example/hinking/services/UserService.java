@@ -27,7 +27,7 @@ public class UserService {
     public UserDTO getUserById(Long id) {
         return userRepository.findById(id).map(UserMapper::toDTO).orElse(null);    }
 
-    // Créer un nouvel utilisateur
+
     public UserDTO createUser(UserDTO userDTO) {
         User user = UserMapper.toEntity(userDTO);
         user = userRepository.save(user);
@@ -41,6 +41,7 @@ public class UserService {
             user.setEmail(userDetails.getEmail());
             user.setPassword(userDetails.getPassword());
             user.setProfilePic(userDetails.getProfilePic());
+            user = userRepository.save(user);
             return UserMapper.toDTO(user);
         }
         return null;

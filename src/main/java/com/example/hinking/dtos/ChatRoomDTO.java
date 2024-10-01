@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class ChatRoomDTO {
     private Long chatRoomID;
+    private String name;
 }

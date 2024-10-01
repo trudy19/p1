@@ -1,6 +1,7 @@
 package com.example.hinking.controllers;
 
 
+import com.example.hinking.dtos.ChatRoomDTO;
 import com.example.hinking.models.ChatRoom;
 import com.example.hinking.services.ChatRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,22 +21,22 @@ public class ChatRoomController {
     private ChatRoomService chatRoomService;
 
     @GetMapping
-    public List<ChatRoom> getAllChatRooms() {
+    public List<ChatRoomDTO> getAllChatRooms() {
         return chatRoomService.getAllChatRooms();
     }
 
     @GetMapping("/{id}")
-    public ChatRoom getChatRoomById(@PathVariable Long id) {
+    public ChatRoomDTO getChatRoomById(@PathVariable Long id) {
         return chatRoomService.getChatRoomById(id);
     }
 
     @PostMapping
-    public ChatRoom createChatRoom(@RequestBody ChatRoom chatRoom) {
+    public ChatRoomDTO createChatRoom(@RequestBody ChatRoomDTO chatRoom) {
         return chatRoomService.createChatRoom(chatRoom);
     }
 
     @PutMapping("/{id}")
-    public ChatRoom updateChatRoom(@PathVariable Long id, @RequestBody ChatRoom chatRoom) {
+    public ChatRoomDTO updateChatRoom(@PathVariable Long id, @RequestBody ChatRoomDTO chatRoom) {
         return chatRoomService.updateChatRoom(id, chatRoom);
     }
 

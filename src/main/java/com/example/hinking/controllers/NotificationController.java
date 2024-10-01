@@ -1,5 +1,6 @@
 package com.example.hinking.controllers;
 
+import com.example.hinking.dtos.NotificationDTO;
 import com.example.hinking.models.Notification;
 import com.example.hinking.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,22 +19,22 @@ public class NotificationController {
     private NotificationService notificationService;
 
     @GetMapping
-    public List<Notification> getAllNotifications() {
+    public List<NotificationDTO> getAllNotifications() {
         return notificationService.getAllNotifications();
     }
 
     @GetMapping("/{id}")
-    public Notification getNotificationById(@PathVariable Long id) {
+    public NotificationDTO getNotificationById(@PathVariable Long id) {
         return notificationService.getNotificationById(id);
     }
 
     @PostMapping
-    public Notification createNotification(@RequestBody Notification notification) {
+    public NotificationDTO createNotification(@RequestBody NotificationDTO notification) {
         return notificationService.createNotification(notification);
     }
 
     @PutMapping("/{id}")
-    public Notification updateNotification(@PathVariable Long id, @RequestBody Notification notification) {
+    public NotificationDTO updateNotification(@PathVariable Long id, @RequestBody NotificationDTO notification) {
         return notificationService.updateNotification(id, notification);
     }
 

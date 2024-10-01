@@ -1,11 +1,14 @@
 package com.example.hinking.services;
 
+import com.example.hinking.dtos.MessageDTO;
+import com.example.hinking.mappers.MessageMapper;
 import com.example.hinking.models.Message;
 import com.example.hinking.repositories.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageService {
@@ -13,26 +16,32 @@ public class MessageService {
     @Autowired
     private MessageRepository messageRepository;
 
-    public List<Message> getAllMessages() {
-        return messageRepository.findAll();
+    public List<MessageDTO> getAllMessages() {
+        return messageRepository.findAll().stream()
+                .map(MessageMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Message getMessageById(Long id) {
-        return messageRepository.findById(id).orElse(null);
+    public MessageDTO getMessageById(Long id) {
+        Message message = messageRepository.findById(id).orElse(null);
+        return MessageMapper.toDTO(message);
     }
 
-    public Message createMessage(Message message) {
-        return messageRepository.save(message);
+    public MessageDTO createMessage(MessageDTO messageDTO) {
+        Message message = MessageMapper.toEntity(messageDTO); // Convertir le DTO en entité
+        Message savedMessage = messageRepository.save(message);
+        return MessageMapper.toDTO(savedMessage);
     }
 
-    public Message updateMessage(Long id, Message messageDetails) {
+    public MessageDTO updateMessage(Long id, MessageDTO messageDetails) {
         Message message = messageRepository.findById(id).orElse(null);
         if (message != null) {
             message.setContent(messageDetails.getContent());
             message.setDate(messageDetails.getDate());
             message.setMessageType(messageDetails.getMessageType());
             message.setStatus(messageDetails.getStatus());
-            return messageRepository.save(message);
+            Message updatedMessage = messageRepository.save(message);
+            return MessageMapper.toDTO(updatedMessage);
         }
         return null;
     }

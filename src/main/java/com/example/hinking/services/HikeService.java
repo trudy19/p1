@@ -1,10 +1,13 @@
 package com.example.hinking.services;
+import com.example.hinking.dtos.HikeDTO;
+import com.example.hinking.mappers.HikeMapper;
 import com.example.hinking.models.Hike;
 import com.example.hinking.repositories.HikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -13,19 +16,25 @@ public class HikeService {
     @Autowired
     private HikeRepository hikeRepository;
 
-    public List<Hike> getAllHikes() {
-        return hikeRepository.findAll();
+    public List<HikeDTO> getAllHikes() {
+        return hikeRepository.findAll().stream()
+                .map(HikeMapper::toDTO) // Convertir chaque Hike en HikeDTO
+                .collect(Collectors.toList());
     }
 
-    public Hike getHikeById(Long id) {
-        return hikeRepository.findById(id).orElse(null);
+    public HikeDTO getHikeById(Long id) {
+        Hike hike = hikeRepository.findById(id).orElse(null);
+
+        return  HikeMapper.toDTO(hike);
     }
 
-    public Hike createHike(Hike hike) {
-        return hikeRepository.save(hike);
+    public HikeDTO createHike(HikeDTO hikeDTO) {
+        Hike hike = HikeMapper.toEntity(hikeDTO);
+        Hike savedHike = hikeRepository.save(hike);
+        return HikeMapper.toDTO(savedHike);
     }
 
-    public Hike updateHike(Long id, Hike hikeDetails) {
+    public HikeDTO updateHike(Long id, HikeDTO hikeDetails) {
         Hike hike = hikeRepository.findById(id).orElse(null);
         if (hike != null) {
             hike.setName(hikeDetails.getName());
@@ -37,7 +46,8 @@ public class HikeService {
             hike.setDistance(hikeDetails.getDistance());
             hike.setDuration(hikeDetails.getDuration());
             hike.setVisibility(hikeDetails.getVisibility());
-            return hikeRepository.save(hike);
+            hike=hikeRepository.save(hike);
+            return HikeMapper.toDTO(hike);
         }
         return null;
     }

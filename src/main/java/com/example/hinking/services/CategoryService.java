@@ -36,7 +36,6 @@ public class CategoryService {
         if (category != null) {
             category.setName(categoryDetails.getName());
             category = categoryRepository.save(category);
-
             return CategoryMapper.toDTO(category);
         }
         return null;

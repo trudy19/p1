@@ -21,22 +21,22 @@ public class HikeController {
     private HikeService hikeService;
 
     @GetMapping
-    public List<Hike> getAllHikes() {
+    public List<HikeDTO> getAllHikes() {
         return hikeService.getAllHikes();
     }
 
     @GetMapping("/{id}")
-    public Hike getHikeById(@PathVariable Long id) {
+    public HikeDTO getHikeById(@PathVariable Long id) {
         return hikeService.getHikeById(id);
     }
 
     @PostMapping
-    public Hike createHike(@RequestBody Hike hike) {
+    public HikeDTO createHike(@RequestBody HikeDTO hike) {
         return hikeService.createHike(hike);
     }
 
     @PutMapping("/{id}")
-    public Hike updateHike(@PathVariable Long id, @RequestBody Hike hike) {
+    public HikeDTO updateHike(@PathVariable Long id, @RequestBody HikeDTO hike) {
         return hikeService.updateHike(id, hike);
     }
 
