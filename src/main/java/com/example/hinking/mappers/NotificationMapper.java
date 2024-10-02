@@ -17,6 +17,8 @@ public class NotificationMapper {
         dto.setContent(notification.getContent());
         dto.setDate(notification.getDate());
         dto.setType(notification.getType());
+        dto.setSenderID(notification.getSender().getUserID());
+        dto.setReceiverID(notification.getRecipient().getUserID());
         return dto;
     }
 

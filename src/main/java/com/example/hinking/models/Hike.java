@@ -42,6 +42,7 @@ public class Hike {
     private Category category;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "groupID")
     private Group group;
 }
+

@@ -20,5 +20,7 @@ public class NotificationDTO {
     @NotBlank
     private String type;
 
-    private Long recipientId;
+    private Long senderID;
+
+    private Long receiverID;
 }

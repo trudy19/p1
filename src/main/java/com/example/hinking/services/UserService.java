@@ -34,13 +34,24 @@ public class UserService {
         return UserMapper.toDTO(user);
     }
 
-    public UserDTO updateUser(Long id, User userDetails) {
+    public UserDTO updateUser(Long id, UserDTO userDetails) {
         User user = userRepository.findById(id).orElse(null);
         if (user != null) {
-            user.setName(userDetails.getName());
-            user.setEmail(userDetails.getEmail());
-            user.setPassword(userDetails.getPassword());
-            user.setProfilePic(userDetails.getProfilePic());
+            if (userDetails.getName() != null) {
+                user.setName(userDetails.getName());
+            }
+
+            if (userDetails.getEmail() != null) {
+                user.setEmail(userDetails.getEmail());
+            }
+
+            if (userDetails.getPassword() != null) {
+                user.setPassword(userDetails.getPassword());
+            }
+
+            if (userDetails.getProfilePic() != null) {
+                user.setProfilePic(userDetails.getProfilePic());
+            }
             user = userRepository.save(user);
             return UserMapper.toDTO(user);
         }

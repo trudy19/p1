@@ -31,7 +31,7 @@ public class GroupService {
         Group savedGroup = groupRepository.save(group);
         return GroupMapper.toDTO(savedGroup);    }
 
-    public GroupDTO updateGroup(Long id, Group groupDetails) {
+    public GroupDTO updateGroup(Long id, GroupDTO groupDetails) {
         Group group = groupRepository.findById(id).orElse(null);
         if (group != null) {
             group.setGroupName(groupDetails.getGroupName());

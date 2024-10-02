@@ -29,6 +29,13 @@ public class Notification {
     @JoinColumn(name = "recipient_id")
     private User recipient;
 
+
+    @ManyToOne
+    @JoinColumn(name = "sender_id", nullable = false)
+    private User sender;
+
+
+
     private String type;
 
 }

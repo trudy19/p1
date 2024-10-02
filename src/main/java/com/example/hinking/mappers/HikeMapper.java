@@ -20,10 +20,12 @@ public class HikeMapper {
         dto.setDistance(hike.getDistance());
         dto.setDuration(hike.getDuration());
         dto.setVisibility(hike.getVisibility());
+        dto.setGroupId(hike.getGroup().getGroupID());
+        dto.setUserId(hike.getCreator().getUserID());
+        dto.setCategoryId(hike.getCategory().getCategoryID());
 
         return dto;
     }
-
 
     public static Hike toEntity(HikeDTO dto) {
         if (dto == null) {
@@ -40,7 +42,6 @@ public class HikeMapper {
         hike.setDistance(dto.getDistance());
         hike.setDuration(dto.getDuration());
         hike.setVisibility(dto.getVisibility());
-
         return hike;
     }
 }

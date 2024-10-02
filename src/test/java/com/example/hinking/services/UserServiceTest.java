@@ -25,6 +25,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
+// TODO: Ajouter un test pour changement qu'un seul champ
+
+
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
@@ -48,7 +51,6 @@ public class UserServiceTest {
 
         userDTO = UserMapper.toDTO(user);
     }
-
 
     @Test
     public void testGetAllUsers() {

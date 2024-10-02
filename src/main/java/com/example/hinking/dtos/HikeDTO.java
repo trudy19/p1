@@ -1,5 +1,8 @@
 package com.example.hinking.dtos;
 
+import com.example.hinking.models.Category;
+import com.example.hinking.models.Group;
+import com.example.hinking.models.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -38,4 +41,9 @@ public class HikeDTO {
     private String visibility;
 
     private Long groupId;
+
+    private Long userId;
+
+    private Long categoryId;
+
 }
