@@ -1,0 +1,86 @@
+entity User1 {
+  User1ID Long,
+  name String required,
+  email String required,
+  password String required,
+  profilePic String
+}
+
+entity Notification {
+  notificationID Long,
+  content String required,
+  date Instant required,
+  type String required
+}
+
+entity Hike {
+  hikeID Long,
+  name String required,
+  description String,
+  difficulty String,
+  dateTime Instant required,
+  startPoint String required,
+  endPoint String required,
+  distance Float required,
+  duration Float required,
+  visibility String required
+}
+
+entity Category {
+  categoryID Long,
+  name String required
+}
+
+entity Itinerary {
+  itineraryID Long,
+  waypoints String required,
+  distance Float required,
+  duration Float required
+}
+
+entity Group {
+  groupID Long,
+  groupName String required
+}
+
+entity ChatRoom {
+  chatRoomID Long
+}
+
+entity Message {
+  messageID Long,
+  content String required,
+  date Instant required,
+  messageType String,
+  status String
+}
+
+// Relationships
+relationship OneToMany {
+  User1{notification} to Notification,
+  User1{creator} to Hike,
+  User1{message} to Message,
+  Group{members} to User1
+}
+
+relationship OneToOne {
+  Hike{group} to Group
+}
+
+relationship OneToMany {
+  ChatRoom{message} to Message
+}
+
+relationship ManyToOne {
+  Notification{recipient} to User1,
+  Hike{itinerary} to Itinerary
+}
+
+relationship ManyToMany {
+  User1{hikes} to Hike,
+  User1{groups} to Group
+}
+
+relationship OneToMany {
+  Category{hikes} to Hike
+}
