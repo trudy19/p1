@@ -1,9 +1,16 @@
 package com.example.hinking.services;
 
 import com.example.hinking.dtos.HikeDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.HikeMapper;
+import com.example.hinking.models.Category;
+import com.example.hinking.models.Group;
 import com.example.hinking.models.Hike;
+import com.example.hinking.models.User;
+import com.example.hinking.repositories.CategoryRepository;
+import com.example.hinking.repositories.GroupRepository;
 import com.example.hinking.repositories.HikeRepository;
+import com.example.hinking.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,16 +31,33 @@ public class HikeServiceTest {
 
     @Mock
     private HikeRepository hikeRepository;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private CategoryRepository categoryRepository;
+    @Mock
+    private GroupRepository groupRepository;
 
     @InjectMocks
     private HikeService hikeService;
 
     private Hike hike;
     private HikeDTO hikeDTO;
+    private Category category;
+    private Group group;
+    private User user;
 
     @BeforeEach
     public void setUp() {
         // Créer un objet Hike avec des valeurs de test
+        group = new Group();
+        group.setGroupID(1L);
+        category = new Category();
+        category.setCategoryID(1L);
+
+        user = new User();
+        user.setUserID(1L);
+
         hike = new Hike();
         hike.setHikeID(1L);
         hike.setName("Mountain Trail");
@@ -45,7 +69,9 @@ public class HikeServiceTest {
         hike.setDistance(5.0f);
         hike.setDuration(2.5f);
         hike.setVisibility("High");
-
+        hike.setCategory(category);
+        hike.setGroup(group);
+        hike.setCreator(user);
         hikeDTO = HikeMapper.toDTO(hike); // Mapper vers DTO
     }
 
@@ -75,14 +101,19 @@ public class HikeServiceTest {
     @Test
     public void testGetHikeByIdNotFound() {
         when(hikeRepository.findById(2L)).thenReturn(Optional.empty());
-        HikeDTO result = hikeService.getHikeById(2L);
-        assertNull(result);
+        assertThrows(ResourceNotFoundException.class, () -> hikeService.getHikeById(2L));
         verify(hikeRepository, times(1)).findById(2L);
     }
 
     @Test
     public void testCreateHike() {
         when(hikeRepository.save(any(Hike.class))).thenReturn(hike);
+
+        when(groupRepository.findById(1L)).thenReturn(Optional.of(group));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+
+
         HikeDTO createdHike = hikeService.createHike(hikeDTO);
         assertNotNull(createdHike);
         assertEquals("Mountain Trail", createdHike.getName());
@@ -103,7 +134,10 @@ public class HikeServiceTest {
         updatedHikeDetails.setDistance(6.0f);
         updatedHikeDetails.setDuration(3.0f);
         updatedHikeDetails.setVisibility("Medium");
+        updatedHikeDetails.setCategoryId(1L);
         when(hikeRepository.findById(1L)).thenReturn(Optional.of(hike));
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+
         when(hikeRepository.save(any(Hike.class))).thenReturn(hike);
         HikeDTO updatedHike = hikeService.updateHike(1L, updatedHikeDetails);
         assertNotNull(updatedHike);
@@ -116,11 +150,12 @@ public class HikeServiceTest {
     @Test
     public void testUpdateHikeNotFound() {
         HikeDTO updatedHikeDetails = new HikeDTO();
+
+
         updatedHikeDetails.setName("Updated Mountain Trail");
         when(hikeRepository.findById(2L)).thenReturn(Optional.empty());
-
-        HikeDTO updatedHike = hikeService.updateHike(2L, updatedHikeDetails);
-        assertNull(updatedHike);
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> hikeService.updateHike(2L, updatedHikeDetails));
+        assertEquals("hike not found with id: 2", exception.getMessage());
         verify(hikeRepository, times(1)).findById(2L);
         verify(hikeRepository, times(0)).save(any(Hike.class));
     }

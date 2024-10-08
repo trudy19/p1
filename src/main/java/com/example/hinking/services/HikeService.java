@@ -71,12 +71,13 @@ public class HikeService {
     public HikeDTO updateHike(Long id, HikeDTO hikeDetails) {
         Hike hike = hikeRepository.findById(id).orElse(null);
         Category category=categoryRepository.findById(hikeDetails.getCategoryId()).orElse(null);
-        if(category==null){
-            throw new ResourceNotFoundException("category", hikeDetails.getCategoryId());
-        }
         if (hike == null) {
             throw new ResourceNotFoundException("hike", id);
         }
+        if(category==null){
+            throw new ResourceNotFoundException("category", hikeDetails.getCategoryId());
+        }
+
         if (hikeDetails.getName() != null) {
             hike.setName(hikeDetails.getName());
         }

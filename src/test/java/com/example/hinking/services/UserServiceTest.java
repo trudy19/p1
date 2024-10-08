@@ -3,6 +3,7 @@ package com.example.hinking.services;
 
 import com.example.hinking.dtos.CategoryDTO;
 import com.example.hinking.dtos.UserDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.UserMapper;
 import com.example.hinking.models.Category;
 import com.example.hinking.models.User;
@@ -116,8 +117,12 @@ public class UserServiceTest {
     public void testUpdateUserNotFound() {
 
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
-        UserDTO updatedUser = userService.updateUser(2L, userDTO);
-        assertNull(updatedUser);
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            userService.updateUser(2L, userDTO);
+        });
+        System.out.println(exception.getMessage());
+        assertEquals("User not found with id: 2", exception.getMessage());
+
         verify(userRepository, times(1)).findById(2L);
         verify(userRepository, times(0)).save(any(User.class));
     }

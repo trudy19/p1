@@ -2,6 +2,7 @@ package com.example.hinking.services;
 
 
 import com.example.hinking.dtos.ChatRoomDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.ChatRoomMapper;
 import com.example.hinking.models.ChatRoom;
 import com.example.hinking.repositories.ChatRoomRepository;
@@ -14,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,8 +64,9 @@ public class ChatRoomServiceTest {
     @Test
     public void testGetChatRoomByIdNotFound() {
         when(chatRoomRepository.findById(2L)).thenReturn(Optional.empty());
-        ChatRoomDTO result = chatRoomService.getChatRoomById(2L);
-        assertNull(result);
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> chatRoomService.getChatRoomById(2L));
+        assertEquals("chatRoom not found with id: 2", exception.getMessage());
+
         verify(chatRoomRepository, times(1)).findById(2L);
     }
 
@@ -95,14 +98,17 @@ public class ChatRoomServiceTest {
         ChatRoomDTO updatedChatRoomDetails = new ChatRoomDTO();
         updatedChatRoomDetails.setName("Updated Chat Room");
         when(chatRoomRepository.findById(2L)).thenReturn(Optional.empty());
-        ChatRoomDTO updatedChatRoom = chatRoomService.updateChatRoom(2L, updatedChatRoomDetails);
-        assertNull(updatedChatRoom);
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> chatRoomService.updateChatRoom(2L, updatedChatRoomDetails));
+        assertEquals("chatRoom not found with id: 2", exception.getMessage());
+        
         verify(chatRoomRepository, times(1)).findById(2L);
         verify(chatRoomRepository, times(0)).save(any(ChatRoom.class));
     }
 
     @Test
     public void testDeleteChatRoom() {
+        doNothing().when(chatRoomRepository).deleteById(1L);
+
         chatRoomService.deleteChatRoom(1L);
         verify(chatRoomRepository, times(1)).deleteById(1L);
     }

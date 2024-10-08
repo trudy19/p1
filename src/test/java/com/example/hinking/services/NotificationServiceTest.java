@@ -1,9 +1,12 @@
 package com.example.hinking.services;
 
 import com.example.hinking.dtos.NotificationDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.NotificationMapper;
 import com.example.hinking.models.Notification;
+import com.example.hinking.models.User;
 import com.example.hinking.repositories.NotificationRepository;
+import com.example.hinking.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,21 +29,31 @@ public class NotificationServiceTest {
     @Mock
     private NotificationRepository notificationRepository;
 
+    @Mock
+    private UserRepository userRepository;
+
     @InjectMocks
     private NotificationService notificationService;
 
     private Notification notification;
     private NotificationDTO notificationDTO;
-
+    private User user;
     @BeforeEach
     public void setUp() {
+        user = new User();
+        user.setUserID(1L);
+        user.setName("User");
         notification = new Notification();
         notification.setNotificationID(1L);
         notification.setContent("Test Notification");
         notification.setDate(Instant.now());
         notification.setType("INFO");
+        notification.setSender(user);
+        notification.setRecipient(user);
+
 
         notificationDTO = NotificationMapper.toDTO(notification);
+
     }
 
     @Test
@@ -76,11 +89,14 @@ public class NotificationServiceTest {
         // Arrange
         when(notificationRepository.findById(2L)).thenReturn(Optional.empty());
 
-        // Act
-        NotificationDTO result = notificationService.getNotificationById(2L);
 
+        // Act
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            notificationService.getNotificationById(2L);
+        });
         // Assert
-        assertNull(result);
+        assertEquals("Notification not found with id: 2", exception.getMessage());
+        // Assert
         verify(notificationRepository, times(1)).findById(2L);
     }
 
@@ -88,6 +104,8 @@ public class NotificationServiceTest {
     public void testCreateNotification() {
         // Arrange
         when(notificationRepository.save(any(Notification.class))).thenReturn(notification);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         // Act
         NotificationDTO createdNotification = notificationService.createNotification(notificationDTO);
@@ -128,10 +146,11 @@ public class NotificationServiceTest {
         when(notificationRepository.findById(2L)).thenReturn(Optional.empty());
 
         // Act
-        NotificationDTO updatedNotification = notificationService.updateNotification(2L, updatedNotificationDetails);
-
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            notificationService.updateNotification(2L, updatedNotificationDetails);
+        });
         // Assert
-        assertNull(updatedNotification);
+        assertEquals("Notification not found with id: 2", exception.getMessage());
         verify(notificationRepository, times(1)).findById(2L);
         verify(notificationRepository, times(0)).save(any(Notification.class));
     }

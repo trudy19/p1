@@ -1,6 +1,7 @@
 package com.example.hinking.services;
 
 import com.example.hinking.dtos.CategoryDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.CategoryMapper;
 import com.example.hinking.models.Category;
 import com.example.hinking.repositories.CategoryRepository;
@@ -73,8 +74,8 @@ public class CategoryServiceTest {
     void testGetCategoryByIdWhenNotFound() {
         Long nonExistentId = 999L;
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
-        CategoryDTO result = categoryService.getCategoryById(nonExistentId);
-        assertNull(result);
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> categoryService.getCategoryById(2L));
+        assertEquals("category not found with id: 2", exception.getMessage());
     }
     @Test
     void testCreateCategory() {
@@ -113,7 +114,13 @@ public class CategoryServiceTest {
     @Test
     void testDeleteCategory() {
         Long categoryId = 1L;
+        Category category = new Category();
+        category.setCategoryID(1L);
+        category.setName("Category 1");
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         doNothing().when(categoryRepository).deleteById(categoryId);
+       // ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> categoryService.getCategoryById(2L));
+       //assertEquals("category not found with id: 2", exception.getMessage());
         categoryService.deleteCategory(categoryId);
         verify(categoryRepository, times(1)).deleteById(categoryId);
     }

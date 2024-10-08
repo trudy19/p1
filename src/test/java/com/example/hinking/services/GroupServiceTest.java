@@ -3,6 +3,7 @@ package com.example.hinking.services;
 
 import com.example.hinking.dtos.GroupDTO;
 import com.example.hinking.dtos.UserDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.GroupMapper;
 import com.example.hinking.models.Group;
 import com.example.hinking.models.User;
@@ -92,8 +93,8 @@ public class GroupServiceTest {
     public void testUpdateGroupNotFound() {
 
         when(groupRepository.findById(2L)).thenReturn(Optional.empty());
-        GroupDTO updatedGroup = groupService.updateGroup(2L, groupDTO);
-        assertNull(updatedGroup);
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> groupService.updateGroup(2L,groupDTO));
+        assertEquals("group not found with id: 2", exception.getMessage());
         verify(groupRepository, times(1)).findById(2L);
         verify(groupRepository, times(0)).save(any(Group.class));
     }

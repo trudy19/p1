@@ -31,7 +31,7 @@ public class NotificationService {
     public NotificationDTO getNotificationById(Long id) {
         NotificationDTO notificationDTO = notificationRepository.findById(id).map(NotificationMapper::toDTO).orElse(null);
         if (notificationDTO == null) {
-            throw new ResourceNotFoundException("notification", id);
+            throw new ResourceNotFoundException("Notification", id);
         }
         return notificationDTO;
     }
@@ -57,7 +57,7 @@ public class NotificationService {
     public NotificationDTO updateNotification(Long id, NotificationDTO notificationDetails) {
         Notification notification = notificationRepository.findById(id).orElse(null);
         if (notification == null) {
-            throw new ResourceNotFoundException("notification", id);
+            throw new ResourceNotFoundException("Notification", id);
         }
 
         if (notificationDetails.getContent() != null) {

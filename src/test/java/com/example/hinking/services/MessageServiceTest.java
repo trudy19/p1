@@ -1,6 +1,7 @@
 package com.example.hinking.services;
 
 import com.example.hinking.dtos.MessageDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.MessageMapper;
 import com.example.hinking.models.Message;
 import com.example.hinking.repositories.MessageRepository;
@@ -65,8 +66,8 @@ public class MessageServiceTest {
     @Test
     public void testGetMessageByIdNotFound() {
         when(messageRepository.findById(2L)).thenReturn(Optional.empty());
-        MessageDTO result = messageService.getMessageById(2L);
-        assertNull(result);
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> messageService.getMessageById(2L));
+        assertEquals("message not found with id: 2", exception.getMessage());
         verify(messageRepository, times(1)).findById(2L);
     }
 
@@ -104,8 +105,8 @@ public class MessageServiceTest {
         MessageDTO updatedMessageDetails = new MessageDTO();
         updatedMessageDetails.setContent("Updated Message");
         when(messageRepository.findById(2L)).thenReturn(Optional.empty());
-        MessageDTO updatedMessage = messageService.updateMessage(2L, updatedMessageDetails);
-        assertNull(updatedMessage);
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> messageService.getMessageById(2L));
+        assertEquals("message not found with id: 2", exception.getMessage());
         verify(messageRepository, times(1)).findById(2L);
         verify(messageRepository, times(0)).save(any(Message.class));
     }
