@@ -3,7 +3,9 @@ package com.example.hinking.controllers;
 
 import com.example.hinking.dtos.CategoryDTO;
 import com.example.hinking.services.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,17 +27,17 @@ import java.util.List;
         }
 
         @GetMapping("/{id}")
-        public CategoryDTO getCategoryById(@PathVariable Long id) {
+        public CategoryDTO getCategoryById(@PathVariable @Validated Long id) {
             return categoryService.getCategoryById(id);
         }
 
         @PostMapping
-        public CategoryDTO createCategory(@RequestBody CategoryDTO categoryDTO) {
+        public CategoryDTO createCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
             return categoryService.createCategory(categoryDTO);
         }
 
         @PutMapping("/{id}")
-        public CategoryDTO updateCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+        public CategoryDTO updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryDTO categoryDTO) {
             return categoryService.updateCategory(id, categoryDTO);
         }
 

@@ -22,7 +22,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryID;
 
-    @NotBlank
+    @NotBlank(message = "name  is required")
     private String name;
 
 

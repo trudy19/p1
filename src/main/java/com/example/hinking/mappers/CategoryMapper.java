@@ -6,7 +6,6 @@ import com.example.hinking.models.Category;
 public class CategoryMapper {
     public static CategoryDTO toDTO(Category category) {
         CategoryDTO dto = new CategoryDTO();
-        dto.setCategoryID(category.getCategoryID());
         dto.setName(category.getName());
         return dto;
     }

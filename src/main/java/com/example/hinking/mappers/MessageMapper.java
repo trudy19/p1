@@ -13,7 +13,6 @@ public class MessageMapper {
         }
 
         MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setMessageID(message.getMessageID());
         messageDTO.setContent(message.getContent());
         messageDTO.setDate(message.getDate());
         messageDTO.setMessageType(message.getMessageType());
@@ -29,7 +28,6 @@ public class MessageMapper {
         }
 
         Message message = new Message();
-        message.setMessageID(messageDTO.getMessageID());
         message.setContent(messageDTO.getContent());
         message.setDate(messageDTO.getDate());
         message.setMessageType(messageDTO.getMessageType());

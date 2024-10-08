@@ -2,6 +2,7 @@ package com.example.hinking.models;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatRoomID;
 
+    @NotBlank
     private String name;
 
     @OneToMany(mappedBy = "chatRoom")

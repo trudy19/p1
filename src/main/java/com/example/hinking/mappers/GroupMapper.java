@@ -11,7 +11,6 @@ public class GroupMapper {
         }
 
         GroupDTO dto = new GroupDTO();
-        dto.setGroupID(group.getGroupID());
         dto.setGroupName(group.getGroupName());
 
         return dto;
@@ -23,7 +22,6 @@ public class GroupMapper {
         }
 
         Group group = new Group();
-        group.setGroupID(dto.getGroupID());
         group.setGroupName(dto.getGroupName());
 
         return group;

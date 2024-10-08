@@ -6,10 +6,12 @@ import com.example.hinking.mappers.UserMapper;
 import com.example.hinking.models.User;
 import com.example.hinking.services.UserService;
 import com.example.hinking.utils.JwtUtils;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,11 +39,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
-        authenticationManager.authenticate(
+    public ResponseEntity<?> loginUser(@Valid @RequestBody User user) {
+        Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
         );
-
+        System.out.println("hhhehe"+authenticate);
         // Assuming successful authentication
         String token = jwtUtils.generateToken(user.getEmail());
         return ResponseEntity.ok("Bearer " + token);

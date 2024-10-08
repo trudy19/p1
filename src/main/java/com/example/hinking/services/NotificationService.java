@@ -1,6 +1,7 @@
 package com.example.hinking.services;
 
 import com.example.hinking.dtos.NotificationDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.NotificationMapper;
 import com.example.hinking.mappers.UserMapper;
 import com.example.hinking.models.Notification;
@@ -28,39 +29,48 @@ public class NotificationService {
     }
 
     public NotificationDTO getNotificationById(Long id) {
-        return notificationRepository.findById(id).map(NotificationMapper::toDTO).orElse(null);
+        NotificationDTO notificationDTO = notificationRepository.findById(id).map(NotificationMapper::toDTO).orElse(null);
+        if (notificationDTO == null) {
+            throw new ResourceNotFoundException("notification", id);
+        }
+        return notificationDTO;
     }
 
     public NotificationDTO createNotification(NotificationDTO notificationDTO) {
 
         User userSender = userRepository.findById(notificationDTO.getSenderID()).orElse(null);
-        User userReceiver=userRepository.findById(notificationDTO.getReceiverID()).orElse(null);
-        if (userReceiver != null) {
-            Notification notification = NotificationMapper.toEntity(notificationDTO);
-            notification.setRecipient(userReceiver);
-            notification.setSender(userSender);
-            notification = notificationRepository.save(notification);
-            return NotificationMapper.toDTO(notification);
+        if (userSender == null) {
+            throw new ResourceNotFoundException("user", notificationDTO.getSenderID());
         }
-        return null;
+        User userReceiver = userRepository.findById(notificationDTO.getReceiverID()).orElse(null);
+        if (userReceiver == null) {
+            throw new ResourceNotFoundException("user", notificationDTO.getReceiverID());
+        }
+        Notification notification = NotificationMapper.toEntity(notificationDTO);
+        notification.setRecipient(userReceiver);
+        notification.setSender(userSender);
+        notification = notificationRepository.save(notification);
+        return NotificationMapper.toDTO(notification);
+
     }
 
     public NotificationDTO updateNotification(Long id, NotificationDTO notificationDetails) {
         Notification notification = notificationRepository.findById(id).orElse(null);
-        if (notification != null  ) {
-            if (notificationDetails.getContent() != null) {
-                notification.setContent(notificationDetails.getContent());
-            }
-            if (notificationDetails.getDate() != null) {
-                notification.setDate(notificationDetails.getDate());
-            }
-            if (notificationDetails.getType() != null) {
-                notification.setType(notificationDetails.getType());
-            }
-            notification = notificationRepository.save(notification);
-            return NotificationMapper.toDTO(notification);
+        if (notification == null) {
+            throw new ResourceNotFoundException("notification", id);
         }
-        return null;
+
+        if (notificationDetails.getContent() != null) {
+            notification.setContent(notificationDetails.getContent());
+        }
+        if (notificationDetails.getDate() != null) {
+            notification.setDate(notificationDetails.getDate());
+        }
+        if (notificationDetails.getType() != null) {
+            notification.setType(notificationDetails.getType());
+        }
+        notification = notificationRepository.save(notification);
+        return NotificationMapper.toDTO(notification);
     }
 
     public void deleteNotification(Long id) {

@@ -1,6 +1,7 @@
 package com.example.hinking.services;
 
 import com.example.hinking.dtos.CategoryDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.CategoryMapper;
 import com.example.hinking.models.Category;
 import com.example.hinking.repositories.CategoryRepository;
@@ -22,7 +23,11 @@ public class CategoryService {
     }
 
     public CategoryDTO getCategoryById(Long id) {
-        return categoryRepository.findById(id).map(CategoryMapper::toDTO).orElse(null);
+        CategoryDTO categoryDTO = categoryRepository.findById(id).map(CategoryMapper::toDTO).orElse(null);
+        if (categoryDTO == null) {
+            throw new ResourceNotFoundException("category", id);
+        }
+        return categoryDTO;
     }
 
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
@@ -33,15 +38,19 @@ public class CategoryService {
 
     public CategoryDTO updateCategory(Long id, CategoryDTO categoryDetails) {
         Category category = categoryRepository.findById(id).orElse(null);
-        if (category != null) {
-            category.setName(categoryDetails.getName());
-            category = categoryRepository.save(category);
-            return CategoryMapper.toDTO(category);
+        if (category == null) {
+            throw new ResourceNotFoundException("category", id);
         }
-        return null;
+        category.setName(categoryDetails.getName());
+        category = categoryRepository.save(category);
+        return CategoryMapper.toDTO(category);
     }
 
     public void deleteCategory(Long id) {
+        Category category = categoryRepository.findById(id).orElse(null);
+        if (category == null) {
+            throw new ResourceNotFoundException("category", id);
+        }
         categoryRepository.deleteById(id);
     }
 

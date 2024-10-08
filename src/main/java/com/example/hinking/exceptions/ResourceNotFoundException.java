@@ -1,6 +1,12 @@
 package com.example.hinking.exceptions;
 
 
+/*
+ * Cette exception est utilisée lorsqu' le donnée ne se trouve pas .
+ * Par exemple, si l'utilisateur essaie de recuper  une ressource qui n'
+ * n'existe pas ,
+ * */
+
 public class ResourceNotFoundException extends RuntimeException {
 
 

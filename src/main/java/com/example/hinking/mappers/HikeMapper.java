@@ -10,7 +10,6 @@ public class HikeMapper {
         }
 
         HikeDTO dto = new HikeDTO();
-        dto.setHikeID(hike.getHikeID());
         dto.setName(hike.getName());
         dto.setDescription(hike.getDescription());
         dto.setDifficulty(hike.getDifficulty());

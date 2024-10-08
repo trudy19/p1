@@ -1,5 +1,7 @@
 package com.example.hinking.services;
+
 import com.example.hinking.dtos.GroupDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.GroupMapper;
 import com.example.hinking.models.Group;
 import com.example.hinking.repositories.GroupRepository;
@@ -23,23 +25,27 @@ public class GroupService {
 
     public GroupDTO getGroupById(Long id) {
         Group group = groupRepository.findById(id).orElse(null);
+        if (group == null) {
+            throw new ResourceNotFoundException("group", id);
+        }
         return GroupMapper.toDTO(group);
     }
 
-    public GroupDTO createGroup(GroupDTO  groupDTO) {
+    public GroupDTO createGroup(GroupDTO groupDTO) {
         Group group = GroupMapper.toEntity(groupDTO);
         Group savedGroup = groupRepository.save(group);
-        return GroupMapper.toDTO(savedGroup);    }
+        return GroupMapper.toDTO(savedGroup);
+    }
 
     public GroupDTO updateGroup(Long id, GroupDTO groupDetails) {
         Group group = groupRepository.findById(id).orElse(null);
-        if (group != null) {
-            group.setGroupName(groupDetails.getGroupName());
-            Group updatedGroup = groupRepository.save(group);
-
-            return GroupMapper.toDTO(updatedGroup);
+        if (group == null) {
+            throw new ResourceNotFoundException("group", id);
         }
-        return null;
+        group.setGroupName(groupDetails.getGroupName());
+        Group updatedGroup = groupRepository.save(group);
+        return GroupMapper.toDTO(updatedGroup);
+
     }
 
     public void deleteGroup(Long id) {

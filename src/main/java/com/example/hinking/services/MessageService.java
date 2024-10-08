@@ -1,6 +1,7 @@
 package com.example.hinking.services;
 
 import com.example.hinking.dtos.MessageDTO;
+import com.example.hinking.exceptions.ResourceNotFoundException;
 import com.example.hinking.mappers.MessageMapper;
 import com.example.hinking.models.Message;
 import com.example.hinking.repositories.MessageRepository;
@@ -24,6 +25,9 @@ public class MessageService {
 
     public MessageDTO getMessageById(Long id) {
         Message message = messageRepository.findById(id).orElse(null);
+        if (message == null) {
+            throw new ResourceNotFoundException("message", id);
+        }
         return MessageMapper.toDTO(message);
     }
 
@@ -35,15 +39,15 @@ public class MessageService {
 
     public MessageDTO updateMessage(Long id, MessageDTO messageDetails) {
         Message message = messageRepository.findById(id).orElse(null);
-        if (message != null) {
-            message.setContent(messageDetails.getContent());
-            message.setDate(messageDetails.getDate());
-            message.setMessageType(messageDetails.getMessageType());
-            message.setStatus(messageDetails.getStatus());
-            Message updatedMessage = messageRepository.save(message);
-            return MessageMapper.toDTO(updatedMessage);
+        if (message == null) {
+            throw new ResourceNotFoundException("message", id);
         }
-        return null;
+        message.setContent(messageDetails.getContent());
+        message.setDate(messageDetails.getDate());
+        message.setMessageType(messageDetails.getMessageType());
+        message.setStatus(messageDetails.getStatus());
+        Message updatedMessage = messageRepository.save(message);
+        return MessageMapper.toDTO(updatedMessage);
     }
 
     public void deleteMessage(Long id) {

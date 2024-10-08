@@ -1,10 +1,8 @@
 package com.example.hinking.dtos;
 
-import com.example.hinking.models.Category;
-import com.example.hinking.models.Group;
-import com.example.hinking.models.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.Instant;
@@ -12,23 +10,25 @@ import java.time.Instant;
 @Data
 public class HikeDTO {
 
-
-    private Long hikeID;
-
     @NotBlank
+    @Size(max = 100)
     private String name;
 
+    @Size(max = 500)
     private String description;
 
+    @Size(max = 50)
     private String difficulty;
 
     @NotNull
     private Instant dateTime;
 
     @NotBlank
+    @Size(max = 100)
     private String startPoint;
 
     @NotBlank
+    @Size(max = 100)
     private String endPoint;
 
     @NotNull
@@ -38,12 +38,15 @@ public class HikeDTO {
     private Float duration;
 
     @NotBlank
+    @Size(max = 50)
     private String visibility;
 
+    @NotNull
     private Long groupId;
 
+    @NotNull
     private Long userId;
 
+    @NotNull
     private Long categoryId;
-
 }

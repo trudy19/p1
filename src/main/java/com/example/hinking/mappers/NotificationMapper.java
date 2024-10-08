@@ -13,7 +13,6 @@ public class NotificationMapper {
             return null;
         }
         NotificationDTO dto = new NotificationDTO();
-        dto.setNotificationID(notification.getNotificationID());
         dto.setContent(notification.getContent());
         dto.setDate(notification.getDate());
         dto.setType(notification.getType());
